@@ -11,14 +11,14 @@
   <div class="max-w-4xl mx-auto p-8">
     <header class="flex justify-between items-start mb-10">
       <div class="text-center flex-1">
-        <h1 class="text-5xl font-bold text-emerald-600 dark:text-emerald-500 mb-2">ReviewGuard <span class="text-xl text-gray-400">v2.5</span></h1>
+        <h1 class="text-5xl font-bold text-emerald-600 dark:text-emerald-500 mb-2">ReviewGuard <span class="text-xl text-gray-400">v2.6</span></h1>
         <p class="text-xl text-gray-600 dark:text-gray-400">Search only the most trusted expert review sites.<br>No scams. No affiliate funnels. Just real buying advice.</p>
       </div>
 
-      <!-- Dark mode toggle -->
+      <!-- Smaller dark mode toggle -->
       <button onclick="toggleDarkMode()" 
-              class="p-3 rounded-2xl bg-white dark:bg-zinc-800 border border-gray-200 dark:border-zinc-700 hover:shadow-md transition-all">
-        <span id="themeIcon" class="text-2xl">☀️</span>
+              class="p-2 rounded-2xl bg-white dark:bg-zinc-800 border border-gray-200 dark:border-zinc-700 hover:shadow-md transition-all text-2xl w-10 h-10 flex items-center justify-center">
+        <span id="themeIcon">🌙</span>
       </button>
     </header>
 
@@ -36,8 +36,8 @@
     </div>
 
     <div class="relative mb-12">
-      <input id="searchInput" type="text" placeholder="What are you shopping for? (e.g. Kindle Paperwhite 2024...)"
-             class="w-full text-2xl p-6 pl-12 rounded-3xl border border-gray-300 dark:border-zinc-600 focus:border-emerald-500 focus:outline-none shadow-sm bg-white dark:bg-zinc-900 text-gray-900 dark:text-gray-100">
+      <input id="searchInput" type="text" placeholder="What are you shopping for? (e.g. Kindle Paperwhite 2024, solar bug zapper...)"
+             class="w-full text-2xl p-6 pl-12 pr-36 rounded-3xl border border-gray-300 dark:border-zinc-600 focus:border-emerald-500 focus:outline-none shadow-sm bg-white dark:bg-zinc-900 text-gray-900 dark:text-gray-100">
       <button onclick="performSearch()" 
               class="absolute right-6 top-1/2 -translate-y-1/2 bg-emerald-600 text-white px-8 py-4 rounded-3xl font-medium hover:bg-emerald-700">
         Search
@@ -54,7 +54,7 @@
   <script>
     let API_KEY = localStorage.getItem('serperApiKey') || '';
 
-    const trustedDomains = [
+    const trustedDomains = [ /* same 18 sites as v2.3 */ 
       "nytimes.com/wirecutter", "rtings.com", "outdoorgearlab.com",
       "consumerreports.org", "cnet.com", "thespruce.com",
       "goodhousekeeping.com", "tomsguide.com", "techradar.com", "pcmag.com",
@@ -62,30 +62,18 @@
       "reviewed.com", "soundguys.com", "whatifi.com", "techhive.com"
     ];
 
-    const siteNames = {
-      "nytimes.com/wirecutter": "Wirecutter",
-      "rtings.com": "RTINGS.com",
-      "outdoorgearlab.com": "Outdoor Gear Lab",
-      "consumerreports.org": "Consumer Reports",
-      "cnet.com": "CNET",
-      "thespruce.com": "The Spruce",
-      "goodhousekeeping.com": "Good Housekeeping",
-      "tomsguide.com": "Tom's Guide",
-      "techradar.com": "TechRadar",
-      "pcmag.com": "PCMag",
-      "theverge.com": "The Verge",
-      "engadget.com": "Engadget",
-      "digitaltrends.com": "Digital Trends",
-      "laptopmag.com": "Laptop Mag",
-      "reviewed.com": "Reviewed",
-      "soundguys.com": "SoundGuys",
-      "whatifi.com": "What Hi-Fi?",
-      "techhive.com": "TechHive"
+    const siteNames = { /* same mapping as before */ 
+      "nytimes.com/wirecutter": "Wirecutter", "rtings.com": "RTINGS.com", "outdoorgearlab.com": "Outdoor Gear Lab",
+      "consumerreports.org": "Consumer Reports", "cnet.com": "CNET", "thespruce.com": "The Spruce",
+      "goodhousekeeping.com": "Good Housekeeping", "tomsguide.com": "Tom's Guide", "techradar.com": "TechRadar",
+      "pcmag.com": "PCMag", "theverge.com": "The Verge", "engadget.com": "Engadget",
+      "digitaltrends.com": "Digital Trends", "laptopmag.com": "Laptop Mag", "reviewed.com": "Reviewed",
+      "soundguys.com": "SoundGuys", "whatifi.com": "What Hi-Fi?", "techhive.com": "TechHive"
     };
 
     const reviewKeywords = ["best", "top", "tested", "review", "reviewed", "guide", "comparison", "picks", "winners"];
 
-    function saveApiKey() {
+    function saveApiKey() { /* unchanged */ 
       const key = document.getElementById('apiKeyInput').value.trim();
       if (key) {
         localStorage.setItem('serperApiKey', key);
@@ -95,14 +83,14 @@
       }
     }
 
-    function getRelevanceScore(title) {
+    function getRelevanceScore(title) { /* unchanged */ 
       let score = 0;
       const lower = title.toLowerCase();
       reviewKeywords.forEach(k => { if (lower.includes(k)) score += 10; });
       return score;
     }
 
-    function getSiteName(link) {
+    function getSiteName(link) { /* unchanged */ 
       for (const [domain, name] of Object.entries(siteNames)) {
         if (link.includes(domain)) return name;
       }
@@ -123,11 +111,10 @@
       }
     }
 
-    // Load saved theme
     function initTheme() {
-      const savedTheme = localStorage.getItem('theme');
+      const saved = localStorage.getItem('theme');
       const html = document.documentElement;
-      if (savedTheme === 'dark' || (!savedTheme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+      if (saved === 'dark' || (!saved && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
         html.classList.add('dark');
         document.getElementById('themeIcon').textContent = '🌙';
       } else {
@@ -136,28 +123,18 @@
       }
     }
 
-    async function performSearch() {
+    async function performSearch() { /* same logic as v2.3 with thumbnails added */ 
       let query = document.getElementById('searchInput').value.trim();
       if (!query) return;
-      if (!API_KEY) {
-        alert("Please paste your Serper API key first.");
-        return;
-      }
+      if (!API_KEY) { alert("Please paste your Serper API key first."); return; }
 
       const resultsDiv = document.getElementById('results');
       resultsDiv.classList.remove('hidden');
-      resultsDiv.innerHTML = `
-        <div class="flex items-center justify-center py-12">
-          <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-emerald-600"></div>
-          <span class="ml-3 text-lg text-gray-600 dark:text-gray-400">Searching trusted review sites...</span>
-        </div>
-      `;
+      resultsDiv.innerHTML = `<div class="flex items-center justify-center py-12"><div class="animate-spin rounded-full h-8 w-8 border-b-2 border-emerald-600"></div><span class="ml-3 text-lg text-gray-600 dark:text-gray-400">Searching trusted review sites...</span></div>`;
 
       let searchQuery = query;
       const hasReviewWord = reviewKeywords.some(k => query.toLowerCase().includes(k));
-      if (!hasReviewWord && query.split(' ').length < 5) {
-        searchQuery = query + " review";
-      }
+      if (!hasReviewWord && query.split(' ').length < 5) searchQuery = query + " review";
 
       try {
         const response = await fetch('https://google.serper.dev/search', {
@@ -167,7 +144,6 @@
         });
 
         const data = await response.json();
-
         let trustedResults = [];
 
         if (data.organic && data.organic.length > 0) {
@@ -190,13 +166,25 @@
             const card = document.createElement('a');
             card.href = result.link;
             card.target = "_blank";
-            card.className = "block p-6 bg-white dark:bg-zinc-900 rounded-3xl border border-gray-200 dark:border-zinc-700 hover:border-emerald-500 hover:shadow-md transition-all";
+            card.className = "flex gap-4 p-6 bg-white dark:bg-zinc-900 rounded-3xl border border-gray-200 dark:border-zinc-700 hover:border-emerald-500 hover:shadow-md transition-all";
+
+            // Thumbnail if available
+            let thumbnailHTML = '';
+            if (result.image) {
+              thumbnailHTML = `<img src="${result.image}" class="w-20 h-20 object-cover rounded-2xl flex-shrink-0" alt="">`;
+            } else {
+              thumbnailHTML = `<div class="w-20 h-20 bg-gray-100 dark:bg-zinc-800 rounded-2xl flex-shrink-0 flex items-center justify-center text-3xl">📖</div>`;
+            }
+
             card.innerHTML = `
-              <p class="text-emerald-600 dark:text-emerald-400 text-sm font-medium flex items-center gap-1">
-                <span class="text-lg">✓</span> ${siteName}
-              </p>
-              <h3 class="text-xl font-semibold mt-1 mb-2">${result.title}</h3>
-              <p class="text-gray-600 dark:text-gray-400 line-clamp-4">${result.snippet || ''}</p>
+              ${thumbnailHTML}
+              <div class="flex-1">
+                <p class="text-emerald-600 dark:text-emerald-400 text-sm font-medium flex items-center gap-1">
+                  <span class="text-lg">✓</span> ${siteName}
+                </p>
+                <h3 class="text-xl font-semibold mt-1 mb-2">${result.title}</h3>
+                <p class="text-gray-600 dark:text-gray-400 line-clamp-4">${result.snippet || ''}</p>
+              </div>
             `;
             container.appendChild(card);
           });
@@ -216,12 +204,7 @@
     }
 
     if (API_KEY) document.getElementById('apiSetup').style.display = 'none';
-
-    document.getElementById('searchInput').addEventListener('keypress', e => {
-      if (e.key === 'Enter') performSearch();
-    });
-
-    // Initialize dark mode on load
+    document.getElementById('searchInput').addEventListener('keypress', e => { if (e.key === 'Enter') performSearch(); });
     window.onload = initTheme;
   </script>
 </body>
