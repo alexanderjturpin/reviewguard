@@ -10,7 +10,7 @@
 <body class="bg-gray-50">
   <div class="max-w-4xl mx-auto p-8">
     <header class="text-center mb-10">
-      <h1 class="text-5xl font-bold text-emerald-600 mb-2">ReviewGuard <span class="text-xl text-gray-400">v1.3</span></h1>
+      <h1 class="text-5xl font-bold text-emerald-600 mb-2">ReviewGuard <span class="text-xl text-gray-400">v1.4</span></h1>
       <p class="text-xl text-gray-600">Search only the most trusted expert review sites.<br>No scams. No affiliate funnels. Just real buying advice.</p>
     </header>
 
@@ -28,7 +28,7 @@
     </div>
 
     <div class="relative mb-12">
-      <input id="searchInput" type="text" placeholder="What are you shopping for? (e.g. solar bug zapper, safe humidifier...)"
+      <input id="searchInput" type="text" placeholder="What are you shopping for? (e.g. solar bug zapper...)"
              class="w-full text-2xl p-6 pl-12 rounded-3xl border border-gray-300 focus:border-emerald-500 focus:outline-none shadow-sm">
       <button onclick="performSearch()" 
               class="absolute right-6 top-1/2 -translate-y-1/2 bg-emerald-600 text-white px-8 py-4 rounded-3xl font-medium hover:bg-emerald-700">
@@ -69,7 +69,7 @@
           method: 'POST',
           headers: { 'X-API-KEY': API_KEY, 'Content-Type': 'application/json' },
           body: JSON.stringify({
-            q: `${query} review OR best OR guide OR "buying guide"`,
+            q: query,                    // ← simplified to bare query only
             gl: 'us',
             hl: 'en',
             num: 20
@@ -77,27 +77,26 @@
         });
 
         const data = await response.json();
-        console.log("🔍 FULL Serper response:", data);   // <--- this is what we need to see
+        console.log("🔍 FULL Serper response:", data);
 
         const container = document.createElement('div');
         container.className = 'space-y-6';
 
         if (data.organic && data.organic.length > 0) {
-          data.organic.forEach((result, i) => {
+          data.organic.forEach(result => {
             const card = document.createElement('a');
             card.href = result.link;
             card.target = "_blank";
             card.className = "block p-6 bg-white rounded-3xl border border-gray-200 hover:border-emerald-500 hover:shadow-md transition-all";
             card.innerHTML = `
-              <p class="text-emerald-600 text-sm font-medium">Result ${i+1}</p>
-              <h3 class="text-xl font-semibold mt-1 mb-2">${result.title}</h3>
+              <h3 class="text-xl font-semibold">${result.title}</h3>
               <p class="text-gray-600 line-clamp-3">${result.snippet || ''}</p>
-              <p class="text-xs text-gray-400 mt-2 break-all">${result.link}</p>
+              <p class="text-xs text-gray-400 mt-2">${result.link}</p>
             `;
             container.appendChild(card);
           });
         } else {
-          container.innerHTML = `<p class="text-gray-500">Serper returned no results at all.</p>`;
+          container.innerHTML = `<p class="text-gray-500">Serper returned no results.</p>`;
         }
 
         resultsDiv.innerHTML = `<h2 class="text-2xl font-semibold mb-2">Results for "<span class="text-emerald-600">${query}</span>"</h2>`;
