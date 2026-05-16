@@ -10,11 +10,10 @@
 <body class="bg-gray-50">
   <div class="max-w-4xl mx-auto p-8">
     <header class="text-center mb-10">
-      <h1 class="text-5xl font-bold text-emerald-600 mb-2">ReviewGuard <span class="text-xl text-gray-400">v1.5</span></h1>
+      <h1 class="text-5xl font-bold text-emerald-600 mb-2">ReviewGuard <span class="text-xl text-gray-400">v1.6</span></h1>
       <p class="text-xl text-gray-600">Search only the most trusted expert review sites.<br>No scams. No affiliate funnels. Just real buying advice.</p>
     </header>
 
-    <!-- API Key setup -->
     <div id="apiSetup" class="mb-8 p-6 bg-white rounded-3xl border border-gray-200">
       <h3 class="font-semibold mb-3">Paste your Serper.dev API key to get started</h3>
       <div class="flex gap-3">
@@ -43,12 +42,6 @@
   <script>
     let API_KEY = localStorage.getItem('serperApiKey') || '';
 
-    const trustedDomains = [
-      "nytimes.com/wirecutter", "rtings.com", "outdoorgearlab.com",
-      "consumerreports.org", "cnet.com", "thespruce.com",
-      "goodhousekeeping.com", "tomsguide.com", "techradar.com", "pcmag.com"
-    ];
-
     function saveApiKey() {
       const key = document.getElementById('apiKeyInput').value.trim();
       if (key) {
@@ -69,7 +62,7 @@
 
       const resultsDiv = document.getElementById('results');
       resultsDiv.classList.remove('hidden');
-      resultsDiv.innerHTML = `<h2 class="text-2xl font-semibold mb-6">Searching trusted sites for "<span class="text-emerald-600">${query}</span>"...</h2>`;
+      resultsDiv.innerHTML = `<h2 class="text-2xl font-semibold mb-6">Searching for "<span class="text-emerald-600">${query}</span>"...</h2>`;
 
       try {
         const response = await fetch('https://google.serper.dev/search', {
@@ -84,33 +77,29 @@
         });
 
         const data = await response.json();
+
         const container = document.createElement('div');
         container.className = 'space-y-6';
 
-        let count = 0;
-
         if (data.organic && data.organic.length > 0) {
           data.organic.forEach(result => {
-            if (trustedDomains.some(domain => result.link.includes(domain))) {
-              count++;
-              const card = document.createElement('a');
-              card.href = result.link;
-              card.target = "_blank";
-              card.className = "block p-6 bg-white rounded-3xl border border-gray-200 hover:border-emerald-500 hover:shadow-md transition-all";
-              card.innerHTML = `
-                <p class="text-emerald-600 text-sm font-medium">✓ Trusted Review Site</p>
-                <h3 class="text-xl font-semibold mt-1 mb-2">${result.title}</h3>
-                <p class="text-gray-600 line-clamp-3">${result.snippet || ''}</p>
-              `;
-              container.appendChild(card);
-            }
+            const card = document.createElement('a');
+            card.href = result.link;
+            card.target = "_blank";
+            card.className = "block p-6 bg-white rounded-3xl border border-gray-200 hover:border-emerald-500 hover:shadow-md transition-all";
+            card.innerHTML = `
+              <p class="text-emerald-600 text-sm font-medium">Result</p>
+              <h3 class="text-xl font-semibold mt-1 mb-2">${result.title}</h3>
+              <p class="text-gray-600 line-clamp-3">${result.snippet || ''}</p>
+              <p class="text-xs text-gray-400 mt-2">${result.link}</p>
+            `;
+            container.appendChild(card);
           });
+        } else {
+          container.innerHTML = `<p class="text-gray-500">Serper returned no results.</p>`;
         }
 
         resultsDiv.innerHTML = `<h2 class="text-2xl font-semibold mb-2">Results for "<span class="text-emerald-600">${query}</span>"</h2>`;
-        if (count === 0) {
-          resultsDiv.innerHTML += `<p class="text-gray-500 mt-6">No trusted review articles found this time.<br>Try "bug zapper review" or "best solar bug zapper".</p>`;
-        }
         resultsDiv.appendChild(container);
 
       } catch (e) {
