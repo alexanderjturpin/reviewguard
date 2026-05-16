@@ -10,7 +10,7 @@
 <body class="bg-gray-50">
   <div class="max-w-4xl mx-auto p-8">
     <header class="text-center mb-10">
-      <h1 class="text-5xl font-bold text-emerald-600 mb-2">ReviewGuard <span class="text-xl text-gray-400">v2.2</span></h1>
+      <h1 class="text-5xl font-bold text-emerald-600 mb-2">ReviewGuard <span class="text-xl text-gray-400">v2.3</span></h1>
       <p class="text-xl text-gray-600">Search only the most trusted expert review sites.<br>No scams. No affiliate funnels. Just real buying advice.</p>
     </header>
 
@@ -28,7 +28,7 @@
     </div>
 
     <div class="relative mb-12">
-      <input id="searchInput" type="text" placeholder="What are you shopping for? (e.g. solar bug zapper, safe humidifier...)"
+      <input id="searchInput" type="text" placeholder="What are you shopping for? (e.g. Kindle Paperwhite 2024...)"
              class="w-full text-2xl p-6 pl-12 rounded-3xl border border-gray-300 focus:border-emerald-500 focus:outline-none shadow-sm">
       <button onclick="performSearch()" 
               class="absolute right-6 top-1/2 -translate-y-1/2 bg-emerald-600 text-white px-8 py-4 rounded-3xl font-medium hover:bg-emerald-700">
@@ -46,10 +46,13 @@
   <script>
     let API_KEY = localStorage.getItem('serperApiKey') || '';
 
+    // Expanded trusted sites (18 high-quality outlets)
     const trustedDomains = [
       "nytimes.com/wirecutter", "rtings.com", "outdoorgearlab.com",
       "consumerreports.org", "cnet.com", "thespruce.com",
-      "goodhousekeeping.com", "tomsguide.com", "techradar.com", "pcmag.com"
+      "goodhousekeeping.com", "tomsguide.com", "techradar.com", "pcmag.com",
+      "theverge.com", "engadget.com", "digitaltrends.com", "laptopmag.com",
+      "reviewed.com", "soundguys.com", "whatifi.com", "techhive.com"
     ];
 
     const reviewKeywords = ["best", "top", "tested", "review", "reviewed", "guide", "comparison", "picks", "winners"];
@@ -68,7 +71,7 @@
       let score = 0;
       const lower = title.toLowerCase();
       reviewKeywords.forEach(k => { if (lower.includes(k)) score += 10; });
-      if (lower.includes("spruce") || lower.includes("wirecutter") || lower.includes("gearlab")) score += 20;
+      if (lower.includes("spruce") || lower.includes("wirecutter") || lower.includes("rtings") || lower.includes("gearlab")) score += 20;
       return score;
     }
 
@@ -89,10 +92,10 @@
         </div>
       `;
 
-      // Smart query enhancement for short/generic searches
+      // Smart enhancement: only add "review" for short/generic queries
       let searchQuery = query;
       const hasReviewWord = reviewKeywords.some(k => query.toLowerCase().includes(k));
-      if (!hasReviewWord && query.split(' ').length < 4) {
+      if (!hasReviewWord && query.split(' ').length < 5) {
         searchQuery = query + " review";
       }
 
