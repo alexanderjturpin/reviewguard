@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="dark">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,47 +7,93 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <style> body { font-family: system-ui, -apple-system, sans-serif; } </style>
 </head>
-<body class="bg-gray-50 dark:bg-zinc-950 text-gray-900 dark:text-gray-100 transition-colors">
+<body class="bg-zinc-950 text-gray-100">
+
+  <!-- Navigation -->
+  <nav class="max-w-4xl mx-auto px-8 pt-8 flex justify-between items-center">
+    <h1 class="text-3xl font-bold text-emerald-500">ReviewGuard</h1>
+    <div class="flex gap-8 text-sm font-medium">
+      <a href="#home" class="hover:text-emerald-400 transition-colors">Home</a>
+      <a href="#tool" class="hover:text-emerald-400 transition-colors">Try the Tool</a>
+      <a href="#story" class="hover:text-emerald-400 transition-colors">Our Story</a>
+      <a href="#how" class="hover:text-emerald-400 transition-colors">How it Works</a>
+    </div>
+  </nav>
+
   <div class="max-w-4xl mx-auto p-8">
-    <header class="flex justify-between items-start mb-10">
-      <div class="text-center flex-1">
-        <h1 class="text-5xl font-bold text-emerald-600 dark:text-emerald-500 mb-2">ReviewGuard <span class="text-xl text-gray-400">v2.8</span></h1>
-        <p class="text-xl text-gray-600 dark:text-gray-400">Search only the most trusted expert review sites.<br>No scams. No affiliate funnels. Just real buying advice.</p>
+
+    <!-- Hero -->
+    <section id="home" class="text-center py-20">
+      <h1 class="text-6xl font-bold text-emerald-500 mb-6">Real reviews.<br>No scams.</h1>
+      <p class="text-2xl text-gray-400 max-w-2xl mx-auto">We search only the most trusted expert review sites so you never get tricked by fake review funnels again.</p>
+      <a href="#tool" class="mt-12 inline-block bg-emerald-600 hover:bg-emerald-700 px-10 py-5 rounded-3xl text-xl font-medium transition-colors">
+        Try the Tool →
+      </a>
+    </section>
+
+    <!-- The Tool -->
+    <section id="tool" class="mb-24">
+      <div class="bg-zinc-900 rounded-3xl p-8 border border-zinc-700">
+        <div id="apiSetup" class="mb-8 p-6 bg-zinc-800 rounded-3xl border border-zinc-600">
+          <h3 class="font-semibold mb-3">Paste your Serper.dev API key to get started</h3>
+          <div class="flex gap-3">
+            <input id="apiKeyInput" type="password" placeholder="serper_xxxxxxxxxxxxxxxxxxxxxxxxxxxx" 
+                   class="flex-1 px-4 py-3 border border-zinc-600 rounded-2xl focus:border-emerald-500 bg-zinc-900 text-white">
+            <button onclick="saveApiKey()" class="bg-emerald-600 text-white px-8 py-3 rounded-2xl font-medium hover:bg-emerald-700">Save Key</button>
+          </div>
+          <p class="text-xs text-gray-400 mt-3">Key is stored only in your browser. Never shared.</p>
+        </div>
+
+        <div class="relative mb-8">
+          <input id="searchInput" type="text" placeholder="What are you shopping for? (e.g. Kindle Paperwhite 2024, solar bug zapper...)"
+                 class="w-full text-2xl p-6 pl-12 pr-36 rounded-3xl border border-zinc-600 focus:border-emerald-500 bg-zinc-900 text-white">
+          <button onclick="performSearch()" 
+                  class="absolute right-6 top-1/2 -translate-y-1/2 bg-emerald-600 text-white px-8 py-4 rounded-3xl font-medium hover:bg-emerald-700">
+            Search
+          </button>
+        </div>
+
+        <div id="results" class="hidden"></div>
       </div>
+    </section>
 
-      <!-- Small, reliable dark mode toggle -->
-      <button onclick="toggleDarkMode()" 
-              class="p-2 rounded-2xl bg-white dark:bg-zinc-800 border border-gray-200 dark:border-zinc-700 hover:shadow-md transition-all text-2xl w-10 h-10 flex items-center justify-center">
-        <span id="themeIcon" class="text-xl">🌙</span>
-      </button>
-    </header>
-
-    <div id="apiSetup" class="mb-8 p-6 bg-white dark:bg-zinc-900 rounded-3xl border border-gray-200 dark:border-zinc-700">
-      <h3 class="font-semibold mb-3">Paste your Serper.dev API key to get started</h3>
-      <div class="flex gap-3">
-        <input id="apiKeyInput" type="password" placeholder="serper_xxxxxxxxxxxxxxxxxxxxxxxxxxxx" 
-               class="flex-1 px-4 py-3 border border-gray-300 dark:border-zinc-600 rounded-2xl focus:border-emerald-500 focus:outline-none bg-white dark:bg-zinc-800 text-gray-900 dark:text-gray-100">
-        <button onclick="saveApiKey()" 
-                class="bg-emerald-600 text-white px-8 py-3 rounded-2xl font-medium hover:bg-emerald-700">
-          Save Key
-        </button>
+    <!-- Our Story -->
+    <section id="story" class="mb-24">
+      <h2 class="text-4xl font-semibold mb-8">Our Story</h2>
+      <div class="prose prose-invert max-w-none text-gray-300">
+        <p>It started with a single solar-powered bug zapper.</p>
+        <p>I asked Grok whether <a href="https://trygroundguard.com" target="_blank" class="text-emerald-400 underline">trygroundguard.com</a> was legitimate. One conversation path recommended it as the “top pick.” Another correctly flagged it as a scam funnel selling an overpriced generic product.</p>
+        <p>That contradiction — plus the fact that I had personally been burned by a similar humidifier scam months earlier — made it painfully clear: the internet is now flooded with sophisticated fake review sites designed to trick shoppers.</p>
+        <p>So we built ReviewGuard: a dead-simple tool that searches <strong>only</strong> trusted expert review sites (Wirecutter, RTINGS, The Spruce, CNET, and others) and completely ignores the scam ecosystem.</p>
+        <p>This tool exists because I got tired of being lied to when trying to buy something good for my family.</p>
       </div>
-      <p class="text-xs text-gray-500 dark:text-gray-400 mt-3">Key is stored only in your browser. Never shared.</p>
-    </div>
+    </section>
 
-    <div class="relative mb-12">
-      <input id="searchInput" type="text" placeholder="What are you shopping for? (e.g. Kindle Paperwhite 2024...)"
-             class="w-full text-2xl p-6 pl-12 pr-36 rounded-3xl border border-gray-300 dark:border-zinc-600 focus:border-emerald-500 focus:outline-none shadow-sm bg-white dark:bg-zinc-900 text-gray-900 dark:text-gray-100">
-      <button onclick="performSearch()" 
-              class="absolute right-6 top-1/2 -translate-y-1/2 bg-emerald-600 text-white px-8 py-4 rounded-3xl font-medium hover:bg-emerald-700">
-        Search
-      </button>
-    </div>
+    <!-- How it Works -->
+    <section id="how" class="mb-24">
+      <h2 class="text-4xl font-semibold mb-8">How ReviewGuard Works</h2>
+      <div class="grid md:grid-cols-3 gap-8">
+        <div class="bg-zinc-900 p-8 rounded-3xl border border-zinc-700">
+          <div class="text-emerald-400 text-4xl mb-4">1️⃣</div>
+          <h3 class="text-xl font-medium mb-2">You search normally</h3>
+          <p class="text-gray-400">“bug zapper”, “Kindle Paperwhite 2024”, “safe humidifier for baby” — whatever you’re actually shopping for.</p>
+        </div>
+        <div class="bg-zinc-900 p-8 rounded-3xl border border-zinc-700">
+          <div class="text-emerald-400 text-4xl mb-4">2️⃣</div>
+          <h3 class="text-xl font-medium mb-2">We only show trusted sources</h3>
+          <p class="text-gray-400">We filter results to 18+ legitimate expert review sites. No Amazon, no fake blogs, no affiliate funnels.</p>
+        </div>
+        <div class="bg-zinc-900 p-8 rounded-3xl border border-zinc-700">
+          <div class="text-emerald-400 text-4xl mb-4">3️⃣</div>
+          <h3 class="text-xl font-medium mb-2">You get real buying advice</h3>
+          <p class="text-gray-400">Clear, expert-written reviews from sites people actually trust. No more guessing.</p>
+        </div>
+      </div>
+    </section>
 
-    <div id="results" class="hidden"></div>
   </div>
 
-  <footer class="text-center text-xs text-gray-400 dark:text-zinc-500 mt-16 pb-8">
+  <footer class="text-center text-xs text-zinc-500 py-12">
     ReviewGuard — Fighting review scams one search at a time ❤️
   </footer>
 
@@ -73,6 +119,8 @@
 
     const reviewKeywords = ["best", "top", "tested", "review", "reviewed", "guide", "comparison", "picks", "winners"];
 
+    const paywalledSites = ["rtings.com", "consumerreports.org"];
+
     function saveApiKey() {
       const key = document.getElementById('apiKeyInput').value.trim();
       if (key) {
@@ -97,32 +145,6 @@
       return "Trusted Review Site";
     }
 
-    function toggleDarkMode() {
-      const html = document.documentElement;
-      const isDark = html.classList.contains('dark');
-      if (isDark) {
-        html.classList.remove('dark');
-        localStorage.setItem('theme', 'light');
-        document.getElementById('themeIcon').textContent = '☀️';
-      } else {
-        html.classList.add('dark');
-        localStorage.setItem('theme', 'dark');
-        document.getElementById('themeIcon').textContent = '🌙';
-      }
-    }
-
-    function initTheme() {
-      const saved = localStorage.getItem('theme');
-      const html = document.documentElement;
-      if (saved === 'dark' || (!saved && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-        html.classList.add('dark');
-        document.getElementById('themeIcon').textContent = '🌙';
-      } else {
-        html.classList.remove('dark');
-        document.getElementById('themeIcon').textContent = '☀️';
-      }
-    }
-
     async function performSearch() {
       let query = document.getElementById('searchInput').value.trim();
       if (!query) return;
@@ -136,7 +158,7 @@
       resultsDiv.innerHTML = `
         <div class="flex items-center justify-center py-12">
           <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-emerald-600"></div>
-          <span class="ml-3 text-lg text-gray-600 dark:text-gray-400">Searching trusted review sites...</span>
+          <span class="ml-3 text-lg text-gray-400">Searching trusted review sites...</span>
         </div>
       `;
 
@@ -174,6 +196,7 @@
         if (trustedResults.length > 0) {
           trustedResults.forEach(result => {
             const siteName = getSiteName(result.link);
+            const isPaywalled = paywalledSites.some(site => result.link.includes(site));
             const card = document.createElement('a');
             card.href = result.link;
             card.target = "_blank";
@@ -187,6 +210,7 @@
                 </p>
                 <h3 class="text-xl font-semibold mt-1 mb-2">${result.title}</h3>
                 <p class="text-gray-600 dark:text-gray-400 line-clamp-4">${result.snippet || ''}</p>
+                ${isPaywalled ? `<p class="text-amber-500 dark:text-amber-400 text-xs mt-3">⚠️ Some content may be behind a paywall</p>` : ''}
               </div>
             `;
             container.appendChild(card);
@@ -196,7 +220,7 @@
         resultsDiv.innerHTML = `<h2 class="text-2xl font-semibold mb-2">Results for "<span class="text-emerald-600">${query}</span>"</h2>`;
 
         if (trustedResults.length === 0) {
-          resultsDiv.innerHTML += `<p class="text-gray-500 dark:text-gray-400 mt-6">No trusted review articles found.<br>Try adding "review", "best", or "tested".</p>`;
+          resultsDiv.innerHTML += `<p class="text-gray-400 mt-6">No trusted review articles found.<br>Try adding "review", "best", or "tested".</p>`;
         } else {
           resultsDiv.appendChild(container);
         }
@@ -207,8 +231,10 @@
     }
 
     if (API_KEY) document.getElementById('apiSetup').style.display = 'none';
-    document.getElementById('searchInput').addEventListener('keypress', e => { if (e.key === 'Enter') performSearch(); });
-    window.onload = initTheme;
+
+    document.getElementById('searchInput').addEventListener('keypress', e => {
+      if (e.key === 'Enter') performSearch();
+    });
   </script>
 </body>
 </html>
