@@ -10,11 +10,10 @@
 <body class="bg-gray-50">
   <div class="max-w-4xl mx-auto p-8">
     <header class="text-center mb-10">
-      <h1 class="text-5xl font-bold text-emerald-600 mb-2">ReviewGuard <span class="text-xl text-gray-400">v1.9</span></h1>
+      <h1 class="text-5xl font-bold text-emerald-600 mb-2">ReviewGuard <span class="text-xl text-gray-400">v2.0</span></h1>
       <p class="text-xl text-gray-600">Search only the most trusted expert review sites.<br>No scams. No affiliate funnels. Just real buying advice.</p>
     </header>
 
-    <!-- API Key setup -->
     <div id="apiSetup" class="mb-8 p-6 bg-white rounded-3xl border border-gray-200">
       <h3 class="font-semibold mb-3">Paste your Serper.dev API key to get started</h3>
       <div class="flex gap-3">
@@ -40,7 +39,6 @@
     <div id="results" class="hidden"></div>
   </div>
 
-  <!-- Small footer -->
   <footer class="text-center text-xs text-gray-400 mt-16 pb-8">
     ReviewGuard — Fighting review scams one search at a time ❤️
   </footer>
@@ -54,6 +52,8 @@
       "goodhousekeeping.com", "tomsguide.com", "techradar.com", "pcmag.com"
     ];
 
+    const reviewKeywords = ["best", "top", "tested", "review", "reviewed", "guide", "comparison", "picks", "winners"];
+
     function saveApiKey() {
       const key = document.getElementById('apiKeyInput').value.trim();
       if (key) {
@@ -62,6 +62,15 @@
         alert("✅ API key saved!");
         document.getElementById('apiSetup').style.display = 'none';
       }
+    }
+
+    function getRelevanceScore(title) {
+      let score = 0;
+      const lowerTitle = title.toLowerCase();
+      reviewKeywords.forEach(keyword => {
+        if (lowerTitle.includes(keyword)) score += 5;
+      });
+      return score;
     }
 
     async function performSearch() {
@@ -90,40 +99,43 @@
 
         const data = await response.json();
 
-        const container = document.createElement('div');
-        container.className = 'space-y-6';
-
-        let count = 0;
+        let trustedResults = [];
 
         if (data.organic && data.organic.length > 0) {
           data.organic.forEach(result => {
             if (trustedDomains.some(domain => result.link.includes(domain))) {
-              count++;
-              const card = document.createElement('a');
-              card.href = result.link;
-              card.target = "_blank";
-              card.className = "block p-6 bg-white rounded-3xl border border-gray-200 hover:border-emerald-500 hover:shadow-md transition-all";
-              card.innerHTML = `
-                <p class="text-emerald-600 text-sm font-medium flex items-center gap-1">
-                  <span class="text-lg">✓</span> Trusted Review Site
-                </p>
-                <h3 class="text-xl font-semibold mt-1 mb-2">${result.title}</h3>
-                <p class="text-gray-600 line-clamp-3">${result.snippet || ''}</p>
-              `;
-              container.appendChild(card);
+              const score = getRelevanceScore(result.title);
+              trustedResults.push({ ...result, score });
             }
           });
         }
 
+        trustedResults.sort((a, b) => b.score - a.score);
+
+        const container = document.createElement('div');
+        container.className = 'space-y-6';
+
+        if (trustedResults.length > 0) {
+          trustedResults.forEach(result => {
+            const card = document.createElement('a');
+            card.href = result.link;
+            card.target = "_blank";
+            card.className = "block p-6 bg-white rounded-3xl border border-gray-200 hover:border-emerald-500 hover:shadow-md transition-all";
+            card.innerHTML = `
+              <p class="text-emerald-600 text-sm font-medium flex items-center gap-1">
+                <span class="text-lg">✓</span> Trusted Review Site
+              </p>
+              <h3 class="text-xl font-semibold mt-1 mb-2">${result.title}</h3>
+              <p class="text-gray-600 line-clamp-3">${result.snippet || ''}</p>
+            `;
+            container.appendChild(card);
+          });
+        }
+
         resultsDiv.innerHTML = `<h2 class="text-2xl font-semibold mb-2">Results for "<span class="text-emerald-600">${query}</span>"</h2>`;
-        
-        if (count === 0) {
-          resultsDiv.innerHTML += `
-            <p class="text-gray-500 mt-6">
-              No trusted review articles found for "<span class="text-emerald-600">${query}</span>".<br>
-              Try: <span class="text-emerald-600 cursor-pointer hover:underline" onclick="document.getElementById('searchInput').value='best ${query}'; performSearch();">best ${query}</span> or 
-              <span class="text-emerald-600 cursor-pointer hover:underline" onclick="document.getElementById('searchInput').value='${query} review'; performSearch();">${query} review</span>
-            </p>`;
+
+        if (trustedResults.length === 0) {
+          resultsDiv.innerHTML += `<p class="text-gray-500 mt-6">No trusted review articles found.<br>Try adding "review", "best", or "tested" to your search.</p>`;
         } else {
           resultsDiv.appendChild(container);
         }
