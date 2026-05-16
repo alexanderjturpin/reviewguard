@@ -11,13 +11,13 @@
   <div class="max-w-4xl mx-auto p-8">
     <header class="flex justify-between items-start mb-10">
       <div class="text-center flex-1">
-        <h1 class="text-5xl font-bold text-emerald-600 dark:text-emerald-500 mb-2">ReviewGuard <span class="text-xl text-gray-400">v2.7</span></h1>
+        <h1 class="text-5xl font-bold text-emerald-600 dark:text-emerald-500 mb-2">ReviewGuard <span class="text-xl text-gray-400">v2.8</span></h1>
         <p class="text-xl text-gray-600 dark:text-gray-400">Search only the most trusted expert review sites.<br>No scams. No affiliate funnels. Just real buying advice.</p>
       </div>
 
-      <!-- Smaller, working dark mode toggle -->
+      <!-- Small, reliable dark mode toggle -->
       <button onclick="toggleDarkMode()" 
-              class="p-2.5 rounded-2xl bg-white dark:bg-zinc-800 border border-gray-200 dark:border-zinc-700 hover:shadow-md transition-all text-2xl w-11 h-11 flex items-center justify-center">
+              class="p-2 rounded-2xl bg-white dark:bg-zinc-800 border border-gray-200 dark:border-zinc-700 hover:shadow-md transition-all text-2xl w-10 h-10 flex items-center justify-center">
         <span id="themeIcon" class="text-xl">🌙</span>
       </button>
     </header>
@@ -63,24 +63,12 @@
     ];
 
     const siteNames = {
-      "nytimes.com/wirecutter": "Wirecutter",
-      "rtings.com": "RTINGS.com",
-      "outdoorgearlab.com": "Outdoor Gear Lab",
-      "consumerreports.org": "Consumer Reports",
-      "cnet.com": "CNET",
-      "thespruce.com": "The Spruce",
-      "goodhousekeeping.com": "Good Housekeeping",
-      "tomsguide.com": "Tom's Guide",
-      "techradar.com": "TechRadar",
-      "pcmag.com": "PCMag",
-      "theverge.com": "The Verge",
-      "engadget.com": "Engadget",
-      "digitaltrends.com": "Digital Trends",
-      "laptopmag.com": "Laptop Mag",
-      "reviewed.com": "Reviewed",
-      "soundguys.com": "SoundGuys",
-      "whatifi.com": "What Hi-Fi?",
-      "techhive.com": "TechHive"
+      "nytimes.com/wirecutter": "Wirecutter", "rtings.com": "RTINGS.com", "outdoorgearlab.com": "Outdoor Gear Lab",
+      "consumerreports.org": "Consumer Reports", "cnet.com": "CNET", "thespruce.com": "The Spruce",
+      "goodhousekeeping.com": "Good Housekeeping", "tomsguide.com": "Tom's Guide", "techradar.com": "TechRadar",
+      "pcmag.com": "PCMag", "theverge.com": "The Verge", "engadget.com": "Engadget",
+      "digitaltrends.com": "Digital Trends", "laptopmag.com": "Laptop Mag", "reviewed.com": "Reviewed",
+      "soundguys.com": "SoundGuys", "whatifi.com": "What Hi-Fi?", "techhive.com": "TechHive"
     };
 
     const reviewKeywords = ["best", "top", "tested", "review", "reviewed", "guide", "comparison", "picks", "winners"];
@@ -190,9 +178,7 @@
             card.href = result.link;
             card.target = "_blank";
             card.className = "flex gap-4 p-6 bg-white dark:bg-zinc-900 rounded-3xl border border-gray-200 dark:border-zinc-700 hover:border-emerald-500 hover:shadow-md transition-all";
-            const thumbnailHTML = result.image 
-              ? `<img src="${result.image}" class="w-20 h-20 object-cover rounded-2xl flex-shrink-0" alt="">` 
-              : `<div class="w-20 h-20 bg-gray-100 dark:bg-zinc-800 rounded-2xl flex-shrink-0 flex items-center justify-center text-3xl">📖</div>`;
+            const thumbnailHTML = `<div class="w-20 h-20 bg-gray-100 dark:bg-zinc-800 rounded-2xl flex-shrink-0 flex items-center justify-center text-3xl">📖</div>`;
             card.innerHTML = `
               ${thumbnailHTML}
               <div class="flex-1">
