@@ -10,11 +10,10 @@
 <body class="bg-gray-50">
   <div class="max-w-4xl mx-auto p-8">
     <header class="text-center mb-10">
-      <h1 class="text-5xl font-bold text-emerald-600 mb-2">ReviewGuard <span class="text-xl text-gray-400">v1.2</span></h1>
+      <h1 class="text-5xl font-bold text-emerald-600 mb-2">ReviewGuard <span class="text-xl text-gray-400">v1.3</span></h1>
       <p class="text-xl text-gray-600">Search only the most trusted expert review sites.<br>No scams. No affiliate funnels. Just real buying advice.</p>
     </header>
 
-    <!-- API Key setup -->
     <div id="apiSetup" class="mb-8 p-6 bg-white rounded-3xl border border-gray-200">
       <h3 class="font-semibold mb-3">Paste your Serper.dev API key to get started</h3>
       <div class="flex gap-3">
@@ -78,28 +77,27 @@
         });
 
         const data = await response.json();
-        console.log("🔍 Serper raw response:", data);   // <-- debug
+        console.log("🔍 FULL Serper response:", data);   // <--- this is what we need to see
 
         const container = document.createElement('div');
         container.className = 'space-y-6';
 
-        let count = 0;
-
         if (data.organic && data.organic.length > 0) {
-          data.organic.forEach(result => {
-            count++;
+          data.organic.forEach((result, i) => {
             const card = document.createElement('a');
             card.href = result.link;
             card.target = "_blank";
             card.className = "block p-6 bg-white rounded-3xl border border-gray-200 hover:border-emerald-500 hover:shadow-md transition-all";
             card.innerHTML = `
-              <p class="text-emerald-600 text-sm font-medium">Result ${count}</p>
+              <p class="text-emerald-600 text-sm font-medium">Result ${i+1}</p>
               <h3 class="text-xl font-semibold mt-1 mb-2">${result.title}</h3>
               <p class="text-gray-600 line-clamp-3">${result.snippet || ''}</p>
-              <p class="text-xs text-gray-400 mt-2">${result.link}</p>
+              <p class="text-xs text-gray-400 mt-2 break-all">${result.link}</p>
             `;
             container.appendChild(card);
           });
+        } else {
+          container.innerHTML = `<p class="text-gray-500">Serper returned no results at all.</p>`;
         }
 
         resultsDiv.innerHTML = `<h2 class="text-2xl font-semibold mb-2">Results for "<span class="text-emerald-600">${query}</span>"</h2>`;
