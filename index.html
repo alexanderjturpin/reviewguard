@@ -10,7 +10,7 @@
 <body class="bg-gray-50">
   <div class="max-w-4xl mx-auto p-8">
     <header class="text-center mb-10">
-      <h1 class="text-5xl font-bold text-emerald-600 mb-2">ReviewGuard <span class="text-xl text-gray-400">v2.3</span></h1>
+      <h1 class="text-5xl font-bold text-emerald-600 mb-2">ReviewGuard <span class="text-xl text-gray-400">v2.4</span></h1>
       <p class="text-xl text-gray-600">Search only the most trusted expert review sites.<br>No scams. No affiliate funnels. Just real buying advice.</p>
     </header>
 
@@ -46,7 +46,6 @@
   <script>
     let API_KEY = localStorage.getItem('serperApiKey') || '';
 
-    // Expanded trusted sites (18 high-quality outlets)
     const trustedDomains = [
       "nytimes.com/wirecutter", "rtings.com", "outdoorgearlab.com",
       "consumerreports.org", "cnet.com", "thespruce.com",
@@ -54,6 +53,27 @@
       "theverge.com", "engadget.com", "digitaltrends.com", "laptopmag.com",
       "reviewed.com", "soundguys.com", "whatifi.com", "techhive.com"
     ];
+
+    const siteNames = {
+      "nytimes.com/wirecutter": "Wirecutter",
+      "rtings.com": "RTINGS.com",
+      "outdoorgearlab.com": "Outdoor Gear Lab",
+      "consumerreports.org": "Consumer Reports",
+      "cnet.com": "CNET",
+      "thespruce.com": "The Spruce",
+      "goodhousekeeping.com": "Good Housekeeping",
+      "tomsguide.com": "Tom's Guide",
+      "techradar.com": "TechRadar",
+      "pcmag.com": "PCMag",
+      "theverge.com": "The Verge",
+      "engadget.com": "Engadget",
+      "digitaltrends.com": "Digital Trends",
+      "laptopmag.com": "Laptop Mag",
+      "reviewed.com": "Reviewed",
+      "soundguys.com": "SoundGuys",
+      "whatifi.com": "What Hi-Fi?",
+      "techhive.com": "TechHive"
+    };
 
     const reviewKeywords = ["best", "top", "tested", "review", "reviewed", "guide", "comparison", "picks", "winners"];
 
@@ -71,8 +91,14 @@
       let score = 0;
       const lower = title.toLowerCase();
       reviewKeywords.forEach(k => { if (lower.includes(k)) score += 10; });
-      if (lower.includes("spruce") || lower.includes("wirecutter") || lower.includes("rtings") || lower.includes("gearlab")) score += 20;
       return score;
+    }
+
+    function getSiteName(link) {
+      for (const [domain, name] of Object.entries(siteNames)) {
+        if (link.includes(domain)) return name;
+      }
+      return "Trusted Review Site";
     }
 
     async function performSearch() {
@@ -92,7 +118,6 @@
         </div>
       `;
 
-      // Smart enhancement: only add "review" for short/generic queries
       let searchQuery = query;
       const hasReviewWord = reviewKeywords.some(k => query.toLowerCase().includes(k));
       if (!hasReviewWord && query.split(' ').length < 5) {
@@ -126,16 +151,17 @@
 
         if (trustedResults.length > 0) {
           trustedResults.forEach(result => {
+            const siteName = getSiteName(result.link);
             const card = document.createElement('a');
             card.href = result.link;
             card.target = "_blank";
             card.className = "block p-6 bg-white rounded-3xl border border-gray-200 hover:border-emerald-500 hover:shadow-md transition-all";
             card.innerHTML = `
               <p class="text-emerald-600 text-sm font-medium flex items-center gap-1">
-                <span class="text-lg">✓</span> Trusted Review Site
+                <span class="text-lg">✓</span> ${siteName}
               </p>
               <h3 class="text-xl font-semibold mt-1 mb-2">${result.title}</h3>
-              <p class="text-gray-600 line-clamp-3">${result.snippet || ''}</p>
+              <p class="text-gray-600 line-clamp-4">${result.snippet || ''}</p>
             `;
             container.appendChild(card);
           });
